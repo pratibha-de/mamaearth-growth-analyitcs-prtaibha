@@ -54,6 +54,12 @@ HAVING COUNT(o.order_id) = 0;
 SELECT 
     customer_id, 
     name
+FROM customers
+WHERE customer_id NOT IN (
+    SELECT DISTINCT customer_id 
+    FROM orders 
+    WHERE customer_id IS NOT NULL
+);
 
     -- -----------------------------------------------------------------------------
 -- Report (d): GROUP BY + HAVING (Return Rate Filter)
