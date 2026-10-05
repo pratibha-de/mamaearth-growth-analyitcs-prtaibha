@@ -161,3 +161,29 @@ JOIN products p ON o.product_id = p.product_id
 JOIN customers c ON o.customer_id = c.customer_id
 GROUP BY p.category
 ORDER BY category_revenue DESC;
+
+-- -----------------------------------------------------------------------------
+-- Report (g): LIKE Pattern Match (Customers starting with 'A')
+-- -----------------------------------------------------------------------------
+/*
++-------------+--------+-----------+-----------+-------------+--------------------+
+| customer_id | name   | city      | city_tier | signup_date | acquisition_source |
++-------------+--------+-----------+-----------+-------------+--------------------+
+| C001        | Aarav  | Mumbai    |         1 | 2026-01-07  | Organic            |
+| C003        | Aditi  | Mumbai    |         1 | 2026-06-23  | Organic            |
+| C004        | Ananya | Lucknow   |         2 | 2026-01-23  | Organic            |
+| C011        | Arjun  | Bangalore |         1 | 2026-03-13  | Referral           |
+| C021        | Aryan  | Bangalore |         1 | 2026-02-11  | Ad                 |
+| C030        | Anika  | Bangalore |         1 | 2026-02-24  | Organic            |
+| C031        | Aditya | Jaipur    |         2 | 2026-06-14  | Ad                 |
+| C036        | Aisha  | Delhi     |         1 | 2026-05-11  | Ad                 |
+| C041        | Ayaan  | Lucknow   |         2 | 2026-01-03  | Organic            |
+| C044        | Aria   | Bangalore |         1 | 2026-04-22  | Referral           |
++-------------+--------+-----------+-----------+-------------+--------------------+
+(Total 10 rows)
+*/
+SELECT * 
+FROM customers 
+WHERE name LIKE 'A%';
+
+
