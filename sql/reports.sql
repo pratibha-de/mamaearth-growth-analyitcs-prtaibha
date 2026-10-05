@@ -203,3 +203,34 @@ SELECT DISTINCT acquisition_source
 FROM customers 
 ORDER BY acquisition_source ASC;
 
+-- -----------------------------------------------------------------------------
+-- Report (i): ALTER TABLE + UPDATE with CASE (Loyalty Tier Classification)
+-- -----------------------------------------------------------------------------
+/*
+Verification Query Output:
++--------------+----------+
+| loyalty_tier | COUNT(*) |
++--------------+----------+
+| Gold         |       28 |
+| Silver       |       17 |
++--------------+----------+
+*/
+-- Step 1: Add new column
+ALTER TABLE customers 
+ADD COLUMN loyalty_tier VARCHAR(10);
+
+-- Step 2: Update loyalty tier based on city_tier
+set sql_safe_updates = 0;
+UPDATE customers 
+SET loyalty_tier = CASE 
+    WHEN city_tier = 1 THEN 'Gold' 
+    ELSE 'Silver' 
+END;
+set sql_safe_updates = 1;
+
+-- Step 3: Verification
+SELECT 
+    loyalty_tier, 
+    COUNT(*) 
+FROM customers 
+GROUP BY loyalty_tier;
