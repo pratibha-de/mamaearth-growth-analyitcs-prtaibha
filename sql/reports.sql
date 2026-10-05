@@ -54,6 +54,29 @@ HAVING COUNT(o.order_id) = 0;
 SELECT 
     customer_id, 
     name
+
+    -- -----------------------------------------------------------------------------
+-- Report (d): GROUP BY + HAVING (Return Rate Filter)
+-- -----------------------------------------------------------------------------
+/*
++-----------+--------------+-----------------+-----------------+
+| city      | total_orders | returned_orders | return_rate_pct |
++-----------+--------------+-----------------+-----------------+
+| Jaipur               19          8             42.1 
+| Lucknow              49           15            30.6 
+| Bangalore            33           8            24.2 
++-----------+--------------+-----------------+-----------------+
+*/
+SELECT 
+    c.city,
+    COUNT(o.order_id) AS total_orders,
+    SUM(o.returned) AS returned_orders,
+    ROUND((SUM(o.returned) * 100.0 / COUNT(o.order_id)), 1) AS return_rate_pct
+FROM orders o
+JOIN customers c ON o.customer_id = c.customer_id
+GROUP BY c.city
+HAVING return_rate_pct > 20.0
+ORDER BY return_rate_pct DESC;
 FROM customers
 WHERE customer_id NOT IN (
     SELECT DISTINCT customer_id 
