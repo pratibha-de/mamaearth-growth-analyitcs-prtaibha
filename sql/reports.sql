@@ -186,4 +186,20 @@ SELECT *
 FROM customers 
 WHERE name LIKE 'A%';
 
+-- -----------------------------------------------------------------------------
+-- Report (h): DISTINCT Acquisition Sources
+-- -----------------------------------------------------------------------------
+/*
++--------------------+
+| acquisition_source |
++--------------------+
+ Ad                 
+ Organic            
+ Referral           
+ Social             
++--------------------+
+*/
+SELECT DISTINCT acquisition_source 
+FROM customers 
+ORDER BY acquisition_source ASC;
 
