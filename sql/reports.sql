@@ -28,3 +28,35 @@ SELECT
     COUNT(rating) AS rated_orders,
     COUNT(*) - COUNT(rating) AS unrated_orders
 FROM orders;
+
+
+-- -----------------------------------------------------------------------------
+-- Report (c): Zero-Match Customer (LEFT JOIN vs NOT IN Verification)
+-- -----------------------------------------------------------------------------
+-- Query 1 Output:
+customer_id: C045
+name: Vihan
+-- Query 2 Output:
+customer_id: C045
+name: Vihan
+*/
+
+-- Query 1: Using LEFT JOIN and HAVING
+SELECT 
+    c.customer_id, 
+    c.name
+FROM customers c
+LEFT JOIN orders o ON c.customer_id = o.customer_id
+GROUP BY c.customer_id, c.name
+HAVING COUNT(o.order_id) = 0;
+
+-- Query 2: Independent verification using NOT IN
+SELECT 
+    customer_id, 
+    name
+FROM customers
+WHERE customer_id NOT IN (
+    SELECT DISTINCT customer_id 
+    FROM orders 
+    WHERE customer_id IS NOT NULL
+);
