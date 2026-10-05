@@ -89,3 +89,54 @@ WHERE customer_id NOT IN (
     FROM orders 
     WHERE customer_id IS NOT NULL
 );
+
+-- -----------------------------------------------------------------------------
+-- Report (e): Ranking with ORDER BY + LIMIT/OFFSET
+-- Tie-break comment: customer_id ASC is added to ensure deterministic sorting order when multiple customers have identical total_spend values.
+-- -----------------------------------------------------------------------------
+/*
+Top 5 Query Output:
++-------------+---------+-------------+
+ customer_id  name     total_spend 
++-------------+---------+-------------+
+ C043         Reyansh     12920.00 
+ C026         Isha         8371.60 
+ C008         Meera        4564.60 
+ C011         Arjun        4111.00 
+ C042         Sanya        3785.00 
++-------------+---------+-------------+
+
+Ranks 3–5 Query Output:
++-------------+-------+-------------+
+ customer_id  name   total_spend 
++-------------+-------+-------------+
+ C008         Meera      4564.60 
+ C011         Arjun      4111.00 
+ C042         Sanya      3785.00 
++-------------+-------+-------------+
+*/
+-- Query 1: Top 5 Customers
+SELECT 
+    c.customer_id,
+    c.name,
+    ROUND(SUM(o.quantity * p.price * (1 - COALESCE(o.discount_pct, 0) / 100.0)), 2) AS total_spend
+FROM orders o
+JOIN products p ON o.product_id = p.product_id
+JOIN customers c ON o.customer_id = c.customer_id
+GROUP BY c.customer_id, c.name
+ORDER BY total_spend DESC, c.customer_id ASC
+LIMIT 5;
+
+-- Query 2: Ranks 3 to 5 (OFFSET 2)
+SELECT 
+    c.customer_id,
+    c.name,
+    ROUND(SUM(o.quantity * p.price * (1 - COALESCE(o.discount_pct, 0) / 100.0)), 2) AS total_spend
+FROM orders o
+JOIN products p ON o.product_id = p.product_id
+JOIN customers c ON o.customer_id = c.customer_id
+GROUP BY c.customer_id, c.name
+ORDER BY total_spend DESC, c.customer_id ASC
+LIMIT 3 OFFSET 2;
+
+-- -----------------------------------------------------------------------------
