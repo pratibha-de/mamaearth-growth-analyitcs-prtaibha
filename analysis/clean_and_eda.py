@@ -174,6 +174,9 @@ time_series_note = (
 print("\nInsight Note:")
 print(time_series_note)
 
+
+part 3 task 1
+
 ##create directory and export findings.json
 import os
 import json
